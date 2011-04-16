@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicXml", "DynamicXml\DynamicXml.csproj", "{5683676B-7A15-4B78-842C-B4810CA34E4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicXml.UnitTests", "DynamicXml.UnitTests\DynamicXml.UnitTests.csproj", "{54E3E211-7F68-45BA-AC8A-DAA3088BE99B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5683676B-7A15-4B78-842C-B4810CA34E4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5683676B-7A15-4B78-842C-B4810CA34E4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5683676B-7A15-4B78-842C-B4810CA34E4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5683676B-7A15-4B78-842C-B4810CA34E4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54E3E211-7F68-45BA-AC8A-DAA3088BE99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54E3E211-7F68-45BA-AC8A-DAA3088BE99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54E3E211-7F68-45BA-AC8A-DAA3088BE99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54E3E211-7F68-45BA-AC8A-DAA3088BE99B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
