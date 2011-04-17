@@ -21,6 +21,9 @@ namespace DynamicXml
         //---------------------------------------------------------------------------------------//
         // Construction, Destruction
         //---------------------------------------------------------------------------------------//
+        
+        #region Construction, Destruction
+        
         private DynamicXElement(XElement element)
         {
             Contract.Requires(element != null);
@@ -36,10 +39,13 @@ namespace DynamicXml
             return new DynamicXElement(element);
         }
 
+        #endregion Construction, Destruction
+
         //---------------------------------------------------------------------------------------//
         // System.Object overrides
         //---------------------------------------------------------------------------------------//
         
+        #region System.Object overrides
         // All overrides for System.Object methods simply delegates they calls to underlying element
 
         public override string ToString()
@@ -59,11 +65,14 @@ namespace DynamicXml
         {
             return element.GetHashCode();
         }
+        #endregion System.Object overrides
 
         //---------------------------------------------------------------------------------------//
         // DynamicObject Overrides
         //---------------------------------------------------------------------------------------//
         
+        #region DynamicObject Overrides
+
         /// <summary>
         /// Converting DynamicXElement to any other type means converting (or extracting) underlying
         /// XElement.Value
@@ -96,13 +105,38 @@ namespace DynamicXml
 
             return base.TryGetMember(binder, out result);
         }
+        
+        #endregion DynamicObject Overrides
 
+        //---------------------------------------------------------------------------------------//
+        // Public Interface
+        //---------------------------------------------------------------------------------------//
+
+        #region Public Interface
+
+        /// <summary>
+        /// Returns true if current element contains parent node
+        /// </summary>
         [Pure]
         public bool HasParent()
         {
             return element.Parent != null;
         }
 
+        /// <summary>
+        /// Indexer that returns XAttribute by XNode
+        /// </summary>
+        public XAttribute this[XNode node]
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Indexer that returns subelement by element index
+        /// </summary>
         public DynamicXElement this[int idx]
         {
             get
@@ -119,9 +153,13 @@ namespace DynamicXml
                 // We should take parent and then access to appropriate child element
                 var parent = element.Parent;
                 Contract.Assume(parent != null);
-                var elements = parent.Elements().ToArray();
-                return CreateInstance(elements[idx]);
+
+                XElement subElement = parent.Elements().ElementAt(idx);
+                return CreateInstance(subElement);
             }
         }
+
+        #endregion Public Interface
+
     }
 }
