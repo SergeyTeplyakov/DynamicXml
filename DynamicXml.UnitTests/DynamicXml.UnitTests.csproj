@@ -58,7 +58,13 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DynamicXElementTest.cs" />
+    <Compile Include="DynamicXElement.SubElements.Test.cs">
+      <DependentUpon>DynamicXElement.Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicXElement.Attributes.Test.cs">
+      <DependentUpon>DynamicXElement.Test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicXElement.Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +72,11 @@
       <Project>{5683676B-7A15-4B78-842C-B4810CA34E4A}</Project>
       <Name>DynamicXml</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DynamicXElement.Elements.Test.cs">
+      <DependentUpon>DynamicXElement.Test.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

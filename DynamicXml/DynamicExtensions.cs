@@ -14,7 +14,7 @@ namespace DynamicXml
         public static dynamic AsDynamic(this XElement element)
         {
             Contract.Requires(element != null);
-            Contract.Ensures(Contract.Result<dynamic>() != null);
+            Contract.Ensures(Contract.Result<object>() != null);
 
             return DynamicXElement.CreateInstance(element);
         }
@@ -26,7 +26,7 @@ namespace DynamicXml
         {
             Contract.Requires(document != null);
             Contract.Requires(document.Root != null);
-            Contract.Ensures(Contract.Result<dynamic>() != null);
+            Contract.Ensures(Contract.Result<object>() != null);
 
             return document.Root.AsDynamic();
         }

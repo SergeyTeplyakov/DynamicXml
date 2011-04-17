@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 using System.Diagnostics.Contracts;
 using System.Dynamic;
@@ -86,9 +88,27 @@ namespace DynamicXml
                 return true;
             }
 
+            if (binder.ReturnType.IsAssignableFrom(typeof(IEnumerable<XElement>)))
+            {
+                result = element.Elements();
+                return true;
+            }
+
             string underlyingValue = element.Value;
+
+            // We shoult treat TimeSpan separately
+            if (binder.ReturnType == typeof(TimeSpan))
+            {
+                result = TimeSpan.Parse(underlyingValue);
+                return true;
+            }
+
+            // For the rest of the types we could use Convert.ChangeType
+
+            // using . as number decimal separator
+            NumberFormatInfo formatInfo = GetDoubleFormatInfo();
             // If this conversion succeeded ok, otherwise we'll have exception
-            result = Convert.ChangeType(underlyingValue, binder.ReturnType);
+            result = Convert.ChangeType(underlyingValue, binder.ReturnType, formatInfo);
             return true;
         }
 
@@ -105,6 +125,15 @@ namespace DynamicXml
 
             return base.TryGetMember(binder, out result);
         }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            return element.Elements()
+                          .Select(x => x.Name.LocalName)
+                          .Distinct()
+                          .OrderBy(x => x);
+        }
+
         
         #endregion DynamicObject Overrides
 
@@ -126,11 +155,11 @@ namespace DynamicXml
         /// <summary>
         /// Indexer that returns XAttribute by XNode
         /// </summary>
-        public XAttribute this[XNode node]
+        public XAttribute this[string node]
         {
             get
             {
-                throw new NotImplementedException();
+                return element.Attribute(node);
             }
         }
 
@@ -161,5 +190,17 @@ namespace DynamicXml
 
         #endregion Public Interface
 
+        //---------------------------------------------------------------------------------------//
+        // Private Methods
+        //---------------------------------------------------------------------------------------//
+        #region Private Methods
+        private static NumberFormatInfo GetDoubleFormatInfo()
+        {
+            var formatInfo = (NumberFormatInfo)Thread.CurrentThread.CurrentCulture.NumberFormat.Clone();
+            formatInfo.NumberDecimalSeparator = ".";
+            return formatInfo;
+        }
+
+        #endregion Private Methods
     }
 }
