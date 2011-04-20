@@ -51,6 +51,21 @@ namespace DynamicXml.UnitTests
         //---------------------------------------------------------------------------------------//
         // Accessing value
         //---------------------------------------------------------------------------------------//
+        [TestCase]
+        public void AccessMissedElementTest()
+        {
+            XElement element = new XElement("name");
+            dynamic dynamicElement = element.AsDynamic();
+            try
+            {
+                string value = dynamicElement.Command.SubCommand.Value;
+            }
+            catch
+            {
+                Console.WriteLine(element);
+                Assert.Throws(typeof(Exception), () => { XElement e = dynamicElement.Command; });
+            }
+        }
 
         [TestCase]
         public void AccessXElementTest()

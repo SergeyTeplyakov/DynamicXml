@@ -126,6 +126,16 @@ namespace DynamicXml
             return base.TryGetMember(binder, out result);
         }
 
+        public override bool TrySetMember(SetMemberBinder binder, object value)
+        {
+            string binderName = binder.Name;
+            if (binderName == element.Name)
+                element.SetValue(value);
+            else
+                element.SetElementValue(binderName, value);
+            return true;
+        }
+
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return element.Elements()
@@ -143,6 +153,15 @@ namespace DynamicXml
 
         #region Public Interface
 
+        public void SetAttributeValue(XName name, object value)
+        {
+            Contract.Requires(name != null);
+            Contract.Requires(value != null);
+            element.SetAttributeValue(name, value);
+        }
+
+        public XElement XElement { get { return element; } }
+
         /// <summary>
         /// Returns true if current element contains parent node
         /// </summary>
@@ -159,8 +178,17 @@ namespace DynamicXml
         {
             get
             {
+                Contract.Requires(string.IsNullOrEmpty(node));
+
                 return element.Attribute(node);
             }
+
+            set
+            {
+                object val = value;
+
+            }
+
         }
 
         /// <summary>
@@ -186,6 +214,7 @@ namespace DynamicXml
                 XElement subElement = parent.Elements().ElementAt(idx);
                 return CreateInstance(subElement);
             }
+
         }
 
         #endregion Public Interface
