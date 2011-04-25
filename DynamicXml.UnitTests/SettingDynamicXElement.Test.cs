@@ -25,7 +25,7 @@ namespace DynamicXml.UnitTests
         {
             XElement element = new XElement("name", "value");
             dynamic dynamicElement = element.AsDynamic();
-            dynamicElement.name = 123;
+            dynamicElement.SetValue(123);
             Assert.That(element.Value, Is.EqualTo("123"));
         }
 

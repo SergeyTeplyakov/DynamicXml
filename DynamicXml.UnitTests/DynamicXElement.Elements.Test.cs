@@ -26,7 +26,7 @@ namespace DynamicXml.UnitTests
         private static void GenericValueAccessTestImpl<T>(T value)
         {
             XElement element = new XElement("name", value);
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             T actual = dynamicElement;
             Assert.That(actual, Is.EqualTo(value));
 
@@ -41,7 +41,7 @@ namespace DynamicXml.UnitTests
         private static void GenericValueAccessWithToStringImpl<T>(T value)
         {
             XElement element = new XElement("name", value.ToString());
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             T actual = dynamicElement;
             Assert.That(actual, Is.EqualTo(value));
 
@@ -63,7 +63,7 @@ namespace DynamicXml.UnitTests
             catch
             {
                 Console.WriteLine(element);
-                Assert.Throws(typeof(Exception), () => { XElement e = dynamicElement.Command; });
+                Assert.Throws(typeof(RuntimeBinderException), () => { XElement e = dynamicElement.Command; });
             }
         }
 
@@ -72,7 +72,7 @@ namespace DynamicXml.UnitTests
         {
             // Cast to XElement should lead to obtaining underlying XElement
             XElement element = new XElement("name", "value");
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             XElement underlyingElement = dynamicElement;
             Assert.That(object.ReferenceEquals(underlyingElement, element));
         }
@@ -131,13 +131,13 @@ namespace DynamicXml.UnitTests
         public void AccessValueWithBinderTest()
         {
             XElement element = new XElement("name", 1);
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             // Following lines are almost equivalent (except caching)
             // to following:
             // int actual = (int)dynamicElement;
 
             var callsiteBinder = Binder.Convert(CSharpBinderFlags.None, typeof(int), 
-                                                    typeof(DynamicXElement));
+                                                    typeof(DynamicXElementReader));
             
             CallSite<Func<CallSite, object, int>> callSite =
                  CallSite<Func<CallSite, object, int>>.Create(callsiteBinder);
@@ -172,9 +172,9 @@ namespace DynamicXml.UnitTests
         public object AccessValueElementTest(string elementName, object value, Type type)
         {
             XElement element = new XElement(elementName, value);
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             CallSiteBinder callsiteBinder = Binder.Convert(CSharpBinderFlags.None, type, 
-                                                           typeof(DynamicXElement));
+                                                           typeof(DynamicXElementReader));
 
             //-----------------------------------------------------------------------------------//
             // Creating Func<CallSite, object, Type> 
@@ -224,7 +224,7 @@ namespace DynamicXml.UnitTests
         public void AccessingZeroIndexTest()
         {
             XElement element = new XElement("name", "value");
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             // Access to zero element means access to element itself
             string value = dynamicElement[0];
             Assert.That(value, Is.EqualTo("value"));
@@ -238,7 +238,7 @@ namespace DynamicXml.UnitTests
             XElement element = new XElement("name",
                 new XElement("Subelement", "value1"),
                 new XElement("Subelement", "value2"));
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
 
             string value1 = dynamicElement.Subelement[0];
             Assert.That(value1, Is.EqualTo("value1"));
@@ -253,7 +253,7 @@ namespace DynamicXml.UnitTests
         public void AccessingNonZeroIndexForOneElementTest()
         {
             XElement element = new XElement("name", "value");
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             // Precondition should failed accessing invalid subelements index
             string value = dynamicElement[1];
             Assert.Fail();

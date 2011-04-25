@@ -67,7 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicExtensions.cs" />
-    <Compile Include="DynamicXElement.cs" />
+    <Compile Include="DynamicXAttribute.cs" />
+    <Compile Include="DynamicXElementBase.cs" />
+    <Compile Include="DynamicXElementReader.cs" />
+    <Compile Include="DynamicXElementWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

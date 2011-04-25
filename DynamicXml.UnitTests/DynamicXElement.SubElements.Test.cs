@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using NUnit.Framework;
 
@@ -30,20 +32,21 @@ namespace DynamicXml.UnitTests
         [TestCase]
         public void AccessEnumerableSubelement()
         {
-            XElement subelement = new XElement("Subelement", "value");
-            XElement element = new XElement("Element", 
-                new XElement("Subelement", "value1"),
-                new XElement("Subelement", "value2"));
+            XElement firstElement = new XElement("Subelement", "value1");
+            XElement secondElement = new XElement("Subelement", "value2");
+            XElement element = new XElement("Element", firstElement, secondElement);
 
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
-            XElement expectedSubelement = dynamicElement.Subelement;
-            Assert.AreEqual(expectedSubelement, subelement);
+            dynamic dynamicElement = element.AsDynamic();
+            // We could convert any dynamic XElement wrapper to List of it subelements
+            IEnumerable<XElement> expectedSubelements = dynamicElement;
+            
+            IList<XElement> subelements = expectedSubelements.ToList();
 
-            string value = dynamicElement.Subelement;
-            Assert.That(value, Is.EqualTo("value"));
+            Assert.That(subelements.Count, Is.EqualTo(2));
+            
+            Assert.That(subelements[0], Is.EqualTo(firstElement));
 
-            Console.WriteLine("Subelement: {0}", expectedSubelement);
-            Console.WriteLine("Subelement value: {0}", value);
+            Assert.That(subelements[1], Is.EqualTo(secondElement));
         }
     }
 }

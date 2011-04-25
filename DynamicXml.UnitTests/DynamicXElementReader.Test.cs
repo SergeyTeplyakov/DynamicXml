@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using System;
 using System.Xml.Linq;
@@ -22,14 +23,14 @@ namespace DynamicXml.UnitTests
         [TestCase(ExpectedExceptionName = "System.Diagnostics.Contracts.__ContractsRuntime+ContractException")]
         public void CreateInstanceFailureTest()
         {
-            dynamic actual = DynamicXElement.CreateInstance(null);
+            dynamic actual = DynamicXElementReader.CreateInstance(null);
         }
 
         [TestCase]
         public void CreateInstanceTest()
         {
             XElement element = new XElement("name", "value");
-            dynamic actual = DynamicXElement.CreateInstance(element);
+            dynamic actual = element.AsDynamic();
             Assert.IsNotNull(actual);
         }
 
@@ -44,7 +45,7 @@ namespace DynamicXml.UnitTests
         {
             // ToString method should call underlying element.ToString method
             XElement element = new XElement("name", "value");
-            dynamic dynamicElement = DynamicXElement.CreateInstance(element);
+            dynamic dynamicElement = element.AsDynamic();
             string actual = dynamicElement.ToString();
             string expected = element.ToString();
             Assert.That(actual, Is.EqualTo(expected));
@@ -56,8 +57,8 @@ namespace DynamicXml.UnitTests
             // ToString method should call underlying element.ToString method
             XElement element1 = new XElement("name", "value");
             XElement element2 = new XElement("name", "value");
-            dynamic dynamicElement1 = DynamicXElement.CreateInstance(element1);
-            dynamic dynamicElement2 = DynamicXElement.CreateInstance(element2);
+            dynamic dynamicElement1 = DynamicXElementReader.CreateInstance(element1);
+            dynamic dynamicElement2 = DynamicXElementReader.CreateInstance(element2);
 
             Console.WriteLine("Equals: " + dynamicElement1.Equals(dynamicElement2));
             Assert.That(element1.Equals(element2), 
@@ -98,7 +99,7 @@ namespace DynamicXml.UnitTests
   </book>
 </books>";
             dynamic dynamicXml = XElement.Parse(books).AsDynamic();
-            
+
             Assert.That(dynamicXml.book[0]["name"].Value, Is.EqualTo("Mortal Engines"));
 
             Assert.That(dynamicXml.book[0].author["name"].Value, Is.EqualTo("Philip Reeve"));
