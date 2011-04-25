@@ -81,10 +81,10 @@ namespace DynamicXml.UnitTests
             CollectionAssert.AreEqual(memberNames, new string[] {"Subelement1", "Subelement2"});
         }
 
-        [TestCase]
-        public void SkeetBookXmlTest()
-        {
-            string books =
+[TestCase]
+public void SkeetBookXmlTest()
+{
+string books =
 @"<books>
   <book name=""Mortal Engines"">
     <author name=""Philip Reeve"" />
@@ -98,17 +98,17 @@ namespace DynamicXml.UnitTests
     <excerpt>Rose was remembering the illustrations from Morally Instructive Tales for the Nursery.</excerpt>
   </book>
 </books>";
-            dynamic dynamicXml = XElement.Parse(books).AsDynamic();
+    dynamic dynamicXml = XElement.Parse(books).AsDynamic();
 
-            Assert.That(dynamicXml.book[0]["name"].Value, Is.EqualTo("Mortal Engines"));
+    Assert.That(dynamicXml.book[0]["name"].Value, Is.EqualTo("Mortal Engines"));
 
-            Assert.That(dynamicXml.book[0].author["name"].Value, Is.EqualTo("Philip Reeve"));
+    Assert.That(dynamicXml.book[0].author["name"].Value, Is.EqualTo("Philip Reeve"));
 
-            Assert.That(dynamicXml.book[2]["name"].Value, Is.EqualTo("Rose"));
+    Assert.That(dynamicXml.book[2]["name"].Value, Is.EqualTo("Rose"));
 
-            Assert.That((string)dynamicXml.book[2].excerpt, Is.EqualTo("Rose was remembering the illustrations from Morally Instructive Tales for the Nursery."));
+    Assert.That((string)dynamicXml.book[2].excerpt, Is.EqualTo("Rose was remembering the illustrations from Morally Instructive Tales for the Nursery."));
 
-        }
+}
 
     }
 }

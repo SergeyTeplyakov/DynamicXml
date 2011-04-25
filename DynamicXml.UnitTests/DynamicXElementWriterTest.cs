@@ -19,7 +19,8 @@ namespace DynamicXml.UnitTests
         // Construction
         //---------------------------------------------------------------------------------------//
 
-        [TestCase(ExpectedExceptionName = "System.Diagnostics.Contracts.__ContractsRuntime+ContractException")]
+        [TestCase(ExpectedExceptionName = 
+            "System.Diagnostics.Contracts.__ContractsRuntime+ContractException")]
         public void CreateInstanceFailureTest()
         {
             dynamic actual = DynamicXElementWriter.CreateInstance(null);
@@ -40,10 +41,10 @@ namespace DynamicXml.UnitTests
         [TestCase]
         public void ChangeExistingSubelementTest()
         {
-            XElement element = new XElement("UserInfo",
-                new XElement("Name", "John"));
+            XElement element = new XElement("userInfo",
+                new XElement("name", "John"));
             dynamic dynamicElement = element.AsDynamicWriter();
-            dynamicElement.Name = "Bob";
+            dynamicElement.name = "Bob";
 
             string name = dynamicElement.Name;
             Assert.That(name, Is.EqualTo("Bob"));
@@ -52,30 +53,30 @@ namespace DynamicXml.UnitTests
         [TestCase]
         public void InsertingSubelementTest()
         {
-            XElement element = new XElement("UserInfo");
+            XElement element = new XElement("userInfo");
             dynamic dynamicElement = element.AsDynamicWriter();
-            dynamicElement.Name = "John";
+            dynamicElement.name = "John";
 
             Console.WriteLine("Resulting XElement: {0}", element);
 
-            Assert.That(element.Element("Name").Value, Is.EqualTo("John"));
-            string name = dynamicElement.Name;
+            Assert.That(element.Element("name").Value, Is.EqualTo("John"));
+            string name = dynamicElement.name;
             Assert.That(name, Is.EqualTo("John"));
         }
 
         [TestCase]
         public void InsertingSeveralSubelementsTest()
         {
-            XElement element = new XElement("Users");
+            XElement element = new XElement("users");
             dynamic dynamicElement = element.AsDynamicWriter();
 
-            dynamicElement.User[0] = "User1";
-            dynamicElement.User[1] = "User2";
+            dynamicElement.user[0] = "User1";
+            dynamicElement.user[1] = "User2";
             
             Console.WriteLine("Resulting XElement: {0}", element);
 
-            string user1 = dynamicElement.User[0];
-            string user2 = dynamicElement.User[1];
+            string user1 = dynamicElement.user[0];
+            string user2 = dynamicElement.user[1];
         
             Assert.That(user1, Is.EqualTo("User1"));
             Assert.That(user2, Is.EqualTo("User2"));
@@ -125,11 +126,11 @@ namespace DynamicXml.UnitTests
             Assert.That(name, Is.EqualTo("Bob"));
         }
 
-        [TestCase]
-        public void SkeetBookXmlTest()
-        {
-            // Jon Skeet in his C# in Depth used following sample
-            string books =
+[TestCase]
+public void SkeetBookXmlTest()
+{
+    // Jon Skeet in his C# in Depth used following sample
+    string books =
 @"<books>
   <book name=""Mortal Engines"">
     <author name=""Philip Reeve"" />
@@ -143,34 +144,33 @@ namespace DynamicXml.UnitTests
     <excerpt>Rose was remembering the illustrations from Morally Instructive Tales for the Nursery.</excerpt>
   </book>
 </books>";
-            // Lets create this data dynamically
-            XElement element = new XElement("books");
-            dynamic dynamicXml = element.AsDynamicWriter();
 
-            dynamicXml.book[0]["name"] = "Mortal Engines";
-            dynamicXml.book[0].author["name"] = "Philip Reeve";
+// Lets create this data dynamically
+XElement element = new XElement("books");
+dynamic dynamicXml = element.AsDynamicWriter();
 
-            dynamicXml.book[1]["name"] = "The Tailisman";
-            dynamicXml.book[1].author[0]["name"] = "Stephen King";
-            dynamicXml.book[1].author[1]["name"] = "Peter Straub";
+dynamicXml.book[0]["name"] = "Mortal Engines";
+dynamicXml.book[0].author["name"] = "Philip Reeve";
 
-            dynamicXml.book[2]["name"] = "Rose";
-            dynamicXml.book[2].author["name"] = "Holly Webb";
-            dynamicXml.book[2].excerpt = "Rose was remembering the illustrations from Morally Instructive Tales for the Nursery.";
+dynamicXml.book[1]["name"] = "The Tailisman";
+dynamicXml.book[1].author[0]["name"] = "Stephen King";
+dynamicXml.book[1].author[1]["name"] = "Peter Straub";
 
+dynamicXml.book[2]["name"] = "Rose";
+dynamicXml.book[2].author["name"] = "Holly Webb";
+dynamicXml.book[2].excerpt = "Rose was remembering the illustrations from Morally Instructive Tales for the Nursery.";
 
-            Console.WriteLine(element);
-            //dynamic dynamicXml = XElement.Parse(books).AsDynamic();
+Console.WriteLine(element);
             
-            Assert.That(dynamicXml.book[0]["name"].Value, Is.EqualTo("Mortal Engines"));
+Assert.That(dynamicXml.book[0]["name"].Value, Is.EqualTo("Mortal Engines"));
 
-            Assert.That(dynamicXml.book[0].author["name"].Value, Is.EqualTo("Philip Reeve"));
+Assert.That(dynamicXml.book[0].author["name"].Value, Is.EqualTo("Philip Reeve"));
 
-            Assert.That(dynamicXml.book[2]["name"].Value, Is.EqualTo("Rose"));
+Assert.That(dynamicXml.book[2]["name"].Value, Is.EqualTo("Rose"));
 
-            Assert.That((string)dynamicXml.book[2].excerpt, Is.EqualTo("Rose was remembering the illustrations from Morally Instructive Tales for the Nursery."));
+Assert.That((string)dynamicXml.book[2].excerpt, Is.EqualTo("Rose was remembering the illustrations from Morally Instructive Tales for the Nursery."));
 
-        }
+}
 
     }
 }
