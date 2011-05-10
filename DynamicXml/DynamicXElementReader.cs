@@ -51,17 +51,24 @@ namespace DynamicXml
         
         #region DynamicObject Overrides
 
+        /// <summary>
+        /// This method called during access to underlying subelement
+        /// </summary>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             string binderName = binder.Name;
             Contract.Assume(binderName != null);
+
+            // Finding apprpopriate subelement and creating dynamic wrapper
+            // if this subelement exists
             XElement subelement = element.Element(binderName);
             if (subelement != null)
             {
                 result = CreateInstance(subelement);
                 return true;
             }
-
+            
+            // Calling base implementation leads to runtime exception
             return base.TryGetMember(binder, out result);
         }
 
@@ -74,7 +81,7 @@ namespace DynamicXml
         #region Public Interface
 
         /// <summary>
-        /// Indexer that returns XAttribute by XNode
+        /// Indexer that returns XAttribute wrapper by XNode
         /// </summary>
         /// <example>
         /// You have several choises how to deal with attributes.
@@ -122,7 +129,7 @@ namespace DynamicXml
                 Contract.Requires(idx >= 0, "Index should be greater or equals to 0");
                 Contract.Requires(idx == 0 || HasParent(), "For non-zero index we should have parent element");
 
-                // For 0 index we returning current element);
+                // For 0 index we returning current element
                 if (idx == 0)
                     return this;
                 

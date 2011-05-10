@@ -161,11 +161,11 @@ namespace DynamicXml
                 
                 // TODO: consider throw IndexOutOfRangeException if idx > parent.Elements.Count() - 1
                 // Lets add new element if appropriate element doesn't exist
-                XElement subElement = parent.Elements().ElementAtOrDefault(idx);
+                XElement subElement = parent.Elements(element.Name).ElementAtOrDefault(idx);
                 if (subElement == null)
                 {
                     // Otherwise we should add another element to our parent
-                    XElement sibling = parent.Elements().First();
+                    XElement sibling = parent.Elements(element.Name).First();
                     subElement = new XElement(sibling.Name);
                     parent.Add(subElement);
                 }

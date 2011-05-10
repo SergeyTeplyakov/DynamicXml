@@ -110,5 +110,59 @@ string books =
 
 }
 
+[TestCase]
+public void SkeetBookXElementTest()
+{
+    string books =
+    @"<books>
+  <book>
+    <title>Mortal Engines</title>
+    <author name=""Philip Reeve"" />
+    <pages>347</pages>
+  </book>
+  <book>
+    <title>The Talisman</title>
+    <author name=""Stephen King"" />
+    <author name=""Peter Straub"" />
+    <pages>431</pages>
+  </book>
+  <book>
+    <title>Rose</title>
+    <author name=""Holly Webb"" />
+    <excerpt>Rose was remembering the illustrations from Morally Instructive Tales for the Nursery.</excerpt>
+    <pages>587</pages>
+  </book>
+</books>";
+    var element = XElement.Parse(books);
+    string firstBooksTitle = element.Element("book").Element("title").Value;
+    Assert.That(firstBooksTitle, Is.EqualTo("Mortal Engines"));
+
+    int firstBooksPageCount = (int)element.Element("book").Element("pages");
+    Assert.That(firstBooksPageCount, Is.EqualTo(347));
+
+    string firstBooksAuthor = element.Element("book").Element("author").Attribute("name").Value;
+    Assert.That(firstBooksAuthor, Is.EqualTo("Philip Reeve"));
+
+    string secondBooksTitle = element.Elements().ElementAt(1).Element("title").Value;
+    Assert.That(secondBooksTitle, Is.EqualTo("The Talisman"));
+
+    dynamic dynamicElement = element.AsDynamic();
+    //dynamic dynamicElement = null; // получили Dynamic Wrapper над объектом XElement
+    //;element.AsDynamic();
+    firstBooksTitle = dynamicElement.book.title;
+    Assert.That(firstBooksTitle, Is.EqualTo("Mortal Engines"));
+
+    firstBooksPageCount = dynamicElement.book.pages;
+    Assert.That(firstBooksPageCount, Is.EqualTo(347));
+
+    // С помощью индексатора, принимающего строку, получаем доступ к атрибуту элемента
+    firstBooksAuthor = dynamicElement.book.author["name"];
+    Assert.That(firstBooksAuthor, Is.EqualTo("Philip Reeve"));
+
+    // С помощью индексатора, принимающего целое число, получаем доступ ко второй книге
+    secondBooksTitle = dynamicElement.book[1].title;
+    Assert.That(secondBooksTitle, Is.EqualTo("The Talisman"));
+}
+
     }
 }

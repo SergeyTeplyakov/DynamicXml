@@ -57,7 +57,7 @@ namespace DynamicXml
         public sealed override bool Equals(object obj)
         {
             var rhs = obj as DynamicXElementBase;
-            if (ReferenceEquals(null, rhs))
+            if (ReferenceEquals(rhs, null))
                 return false;
             return element == rhs.element;
         }
